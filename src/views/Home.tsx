@@ -1,20 +1,24 @@
 import React, { useRef, useState } from 'react'
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useRecoilState } from 'recoil';
 import rootState from '../store/rootState';
 import { Members, DateMemberMessages } from '../types';
 import { messageActions } from '../constants';
+import { useHistory } from 'react-router-dom';
+import memberState from '../store/memberState';
 
 export default function Home() {
   const dateReg = new RegExp(/^([0-9]{4})([./]{1})([0-9]{1,2})([./]{1})([0-9]{1,2})（.+）/);
   const messageReg = new RegExp("^([\u4e00-\u9fa5]{0,2})([0-9]{1,2})[:]{1}([0-9]{1,2})");
   const members = {} as Members;
   const dateMemberMessages = {} as DateMemberMessages;
+  const history = useHistory();
 
   const inputEl = useRef() as React.MutableRefObject<HTMLInputElement>;
   const [root, setRootState] = useRecoilState(rootState);
+  const [memeberNameList, setMemberNameList] = useRecoilState(memberState);
   // const [lines, setLines] = useState([] as string[]);
   const [isLoading, setIsLoading] = useState(false);
-
+  
   const handleUploadFile = () => {
     if (inputEl.current) inputEl.current.click();
   }
@@ -29,6 +33,7 @@ export default function Home() {
   const analyze = (lines: Array<string>) => {
     let totalDays = 0;
     let curDate = '';
+    const memberNameList = [] as Array<string>;
     for (let i = 0; i < lines.length; i ++) {
       const linesAry = lines[i].split(/(\s+)/);
 
@@ -49,6 +54,7 @@ export default function Home() {
               totalPhotos: 0,
               totalTexts: 0,
             };
+            memberNameList.push(name);
           }
 
           if (!dateMemberMessages[curDate][name]) dateMemberMessages[curDate][name] = { messages: 0 };
@@ -69,7 +75,9 @@ export default function Home() {
       dateMemberMessages,
     }));
 
-    console.log(rootState);
+    setMemberNameList(memberNameList);
+
+    history.push('/analytics');
   };
 
   const onChange = (event: React.FormEvent<EventTarget>) => {

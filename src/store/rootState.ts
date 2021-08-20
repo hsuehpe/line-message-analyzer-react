@@ -2,7 +2,7 @@ import { atom } from 'recoil';
 
 const rootState = atom({
   key: 'rootStateKey',
-  default: {},
+  default: {} as any,
 });
 
 export default rootState

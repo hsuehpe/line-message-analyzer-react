@@ -1,5 +1,6 @@
 import './App.css';
 import Home from './views/Home'
+import Analytics from './views/Analytics';
 import {
   Switch,
   Route
@@ -12,8 +13,8 @@ function App() {
         <Route exact path="/">
           <Home />
         </Route>
-        <Route path="/analyze">
-          analyze
+        <Route path="/analytics">
+          <Analytics />
         </Route>
       </Switch>
     </div>
