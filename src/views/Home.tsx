@@ -1,16 +1,17 @@
 import React, { useRef, useState } from 'react'
 import { useRecoilState, useSetRecoilState } from 'recoil';
-import userState from '../store/userState';
-import { Members } from '../types';
+import rootState from '../store/rootState';
+import { Members, DateMemberMessages } from '../types';
 import { messageActions } from '../constants';
 
 export default function Home() {
-  const dateReg = new RegExp("^([0-9]{4})([./]{1})([0-9]{1,2})([./]{1})([0-9]{1,2})");
+  const dateReg = new RegExp(/^([0-9]{4})([./]{1})([0-9]{1,2})([./]{1})([0-9]{1,2})（.+）/);
   const messageReg = new RegExp("^([\u4e00-\u9fa5]{0,2})([0-9]{1,2})[:]{1}([0-9]{1,2})");
   const members = {} as Members;
+  const dateMemberMessages = {} as DateMemberMessages;
 
   const inputEl = useRef() as React.MutableRefObject<HTMLInputElement>;
-  const [user, setUser] = useRecoilState(userState);
+  const [root, setRootState] = useRecoilState(rootState);
   // const [lines, setLines] = useState([] as string[]);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -18,12 +19,22 @@ export default function Home() {
     if (inputEl.current) inputEl.current.click();
   }
 
+  const isContainsMessageActions = (name: string) => {
+    for (let i = 0; i < messageActions.length; i++) {
+      if (name.includes(messageActions[i])) return true;
+    }
+    return false;
+  };
+
   const analyze = (lines: Array<string>) => {
     let totalDays = 0;
+    let curDate = '';
     for (let i = 0; i < lines.length; i ++) {
       const linesAry = lines[i].split(/(\s+)/);
 
-      if (dateReg.test(lines[i].substring(0, 10))) { // date
+      if (dateReg.test(lines[i])) { // date
+        curDate = lines[i].split('（')[0];
+        dateMemberMessages[curDate] = {};
         totalDays++;
       }
 
@@ -31,14 +42,7 @@ export default function Home() {
         const name = linesAry[2];
         const message = linesAry[4];
         if (name) {
-          const isContainsMessageActions = (() => {
-            for (let i = 0; i < messageActions.length; i++) {
-              if (name.includes(messageActions[i])) return true;
-            }
-            return false;
-          })();
-
-          if (!members[name] && !isContainsMessageActions) {
+          if (!members[name] && !isContainsMessageActions(name)) {
             members[name] = {
               totalMessages: 0,
               totalStickers: 0,
@@ -47,16 +51,25 @@ export default function Home() {
             };
           }
 
+          if (!dateMemberMessages[curDate][name]) dateMemberMessages[curDate][name] = { messages: 0 };
+
           if (message) {
             if (message.substring(0, 4) === '[貼圖]') members[name].totalStickers++;
             else if (message.substring(0, 4) === '[照片]') members[name].totalPhotos++;
             else members[name].totalTexts++;
 
+            if (dateMemberMessages[curDate][name]) dateMemberMessages[curDate][name].messages++;
             members[name].totalMessages++;
           }
         }
       }
     }
+
+    setRootState(Object.assign({}, {
+      dateMemberMessages,
+    }));
+
+    console.log(rootState);
   };
 
   const onChange = (event: React.FormEvent<EventTarget>) => {
