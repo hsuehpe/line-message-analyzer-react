@@ -3,15 +3,17 @@ import App from './App';
 import { Router } from 'react-router-dom';
 import { createMemoryHistory } from 'history'
 
-test('render App', () => {
-  const history = createMemoryHistory();
-  render(
-    <Router history={ history }>
-      <App />
-    </Router>
-  );
-  expect(screen.getByText('載入聊天')).toBeInTheDocument();
-
-  history.push('/analyze');
-  expect(screen.getByText('analyze')).toBeInTheDocument();
+describe('App', () => {
+  test('render App', () => {
+    const history = createMemoryHistory();
+    render(
+      <Router history={ history }>
+        <App />
+      </Router>
+    );
+    expect(screen.getByText('載入聊天')).toBeInTheDocument();
+  
+    history.push('/analyze');
+    expect(screen.getByText('analyze')).toBeInTheDocument();
+  });
 });
