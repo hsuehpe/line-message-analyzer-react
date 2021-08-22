@@ -1,40 +1,50 @@
-import { useState, useEffect } from 'react';
-import { useRecoilState } from 'recoil';
-import rootState from '../store/rootState';
+import { useEffect } from 'react';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
-import memberState from '../store/memberState';
+import { memberList, selectedName } from '../store/memberState';
+import { selectedDate } from '../store/dateState';
+import { filteredDateMemberMessages, yearMonths } from '../store/rootSelector';
 
 export default function Analytics() {
-  const [root] = useRecoilState(rootState);
-  const [memberNameList] = useRecoilState(memberState);
-  const { dateMemberMessages } = root
-  const [data, setData] = useState([] as Array<any>);
-  const d = [] as Array<object>;
-  const name = memberNameList[1];
+  const [memberNameList] = useRecoilState(memberList);
+  const [name, setName] = useRecoilState(selectedName);
+  const [date, setDate] = useRecoilState(selectedDate);
+  const filteredMessages = useRecoilValue(filteredDateMemberMessages);
+  const dateOptions = useRecoilValue(yearMonths);
 
   useEffect(() => {
-    for (let date in dateMemberMessages) {
-      d.push({
-        date,
-        messages: (dateMemberMessages[date][name]) ? dateMemberMessages[date][name].messages : 0
-      });
-    }
-
-    setData(d);
+    setName(memberNameList[1]);
+    setDate(dateOptions[0]);
   }, []);
 
   return (
-    <LineChart
-      width={1000}
-      height={600}
-      data={data}
-    >
-      <CartesianGrid strokeDasharray="3 3" />
-      <XAxis dataKey="date" />
-      <YAxis />
-      <Tooltip />
-      <Legend />
-      <Line type="monotone" dataKey="messages" stroke="#82ca9d" />
-    </LineChart>
+    <div>
+      {name} - { filteredMessages.totalMessages }
+      <select value={name} onChange={e => {
+        setName(e.target.value);
+      }}>{ 
+        memberNameList.map((name, index) => <option key={index}>{ name }</option>) 
+      }</select>
+
+      <select value={date} onChange={e => {
+        setDate(e.target.value)
+      }}>
+        {
+          dateOptions.map((date, index) => <option key={index}>{ date }</option>)
+        }
+      </select>
+      <LineChart
+        width={1000}
+        height={600}
+        data={filteredMessages.data}
+      >
+        <CartesianGrid strokeDasharray="3 3" />
+        <XAxis dataKey="date" />
+        <YAxis />
+        <Tooltip />
+        <Legend />
+        <Line type="monotone" dataKey="messages" stroke="#82ca9d" />
+      </LineChart>
+    </div>
   );
 };

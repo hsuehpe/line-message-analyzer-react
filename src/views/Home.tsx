@@ -4,7 +4,7 @@ import rootState from '../store/rootState';
 import { Members, DateMemberMessages } from '../types';
 import { messageActions } from '../constants';
 import { useHistory } from 'react-router-dom';
-import memberState from '../store/memberState';
+import { memberList } from '../store/memberState';
 
 export default function Home() {
   const dateReg = new RegExp(/^([0-9]{4})([./]{1})([0-9]{1,2})([./]{1})([0-9]{1,2})（.+）/);
@@ -15,7 +15,7 @@ export default function Home() {
 
   const inputEl = useRef() as React.MutableRefObject<HTMLInputElement>;
   const [root, setRootState] = useRecoilState(rootState);
-  const [memeberNameList, setMemberNameList] = useRecoilState(memberState);
+  const [memeberNameList, setMemberNameList] = useRecoilState(memberList);
   // const [lines, setLines] = useState([] as string[]);
   const [isLoading, setIsLoading] = useState(false);
   
@@ -73,6 +73,7 @@ export default function Home() {
 
     setRootState(Object.assign({}, {
       dateMemberMessages,
+      members
     }));
 
     setMemberNameList(memberNameList);
