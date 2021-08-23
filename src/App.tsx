@@ -1,4 +1,3 @@
-import './App.css';
 import Home from './views/Home'
 import Analytics from './views/Analytics';
 import {
@@ -8,7 +7,7 @@ import {
 
 function App() {
   return (
-    <div className="App">
+    <div className="h-screen">
       <Switch>
         <Route exact path="/">
           <Home />
