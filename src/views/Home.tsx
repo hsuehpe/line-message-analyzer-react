@@ -5,6 +5,7 @@ import { Members, DateMemberMessages } from '../types';
 import { messageActions } from '../constants';
 import { useHistory } from 'react-router-dom';
 import { memberList } from '../store/memberState';
+import { Button, Loader, Segment, Header, Icon } from 'semantic-ui-react';
 
 export default function Home() {
   const dateReg = new RegExp(/^([0-9]{4})([./]{1})([0-9]{1,2})([./]{1})([0-9]{1,2})（.+）/);
@@ -16,7 +17,6 @@ export default function Home() {
   const inputEl = useRef() as React.MutableRefObject<HTMLInputElement>;
   const [root, setRootState] = useRecoilState(rootState);
   const [memeberNameList, setMemberNameList] = useRecoilState(memberList);
-  // const [lines, setLines] = useState([] as string[]);
   const [isLoading, setIsLoading] = useState(false);
   
   const handleUploadFile = () => {
@@ -107,12 +107,17 @@ export default function Home() {
   }
 
   return (
-    <div>
-      <div className="upload">
-        <div className="btn" onClick={ handleUploadFile }>載入聊天</div>
+    <div className="flex justify-center items-center flex-col">
+      <h1 className="ui header">Line 統計分析</h1>
+      <Loader style={ { display: isLoading ? 'block' : 'none' } } />
+      <Segment placeholder className="w-[400px] h-[300px]">
+        <Header icon>
+          <Icon name="file text" />
+          Upload your txt file
+        </Header>
+        <Button primary onClick={ handleUploadFile }>載入聊天</Button>
         <input ref={ inputEl } type="file" name="file" id="file" style={{ display: 'none' }} onChange={ onChange } />
-      </div>
-      <div style={ { display: isLoading ? 'block' : 'none' } }>Loading ...</div>
+      </Segment>
     </div>
   )
 }
