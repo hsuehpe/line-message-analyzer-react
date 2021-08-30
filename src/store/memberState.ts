@@ -1,10 +1,11 @@
 import { atom } from 'recoil';
 
-const memberState = atom({
-  key: 'memberStateKey',
+export const memberList = atom({
+  key: 'memberList',
   default: [] as Array<string>,
 });
 
-export default memberState;
-
-
+export const selectedName = atom({
+  key: 'selectedName',
+  default: ''
+});
