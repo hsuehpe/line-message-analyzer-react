@@ -35,7 +35,7 @@ export default function Home() {
     let curDate = '';
     const memberNameList = [] as Array<string>;
     for (let i = 0; i < lines.length; i ++) {
-      const linesAry = lines[i].split(/(\s+)/);
+      const linesAry = lines[i].split(/(\t)/);
 
       if (dateReg.test(lines[i])) { // date
         curDate = lines[i].split('（')[0];

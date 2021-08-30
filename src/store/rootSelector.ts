@@ -11,7 +11,7 @@ export const yearMonths = selector({
     const d = ['all'] as Array<string>;
 
     for (let date in dateMemberMessages) {
-      const str = date.split('/')[0] + date.split('/')[1];
+      const str = date.split('/')[0] + '/' + date.split('/')[1];
       if (!d.includes(str)) d.push(str);
     }
 
@@ -30,7 +30,7 @@ export const filteredDateMemberMessages = selector({
     let totalMessages = 0;
     
     for (let date in dateMemberMessages) {
-      const yearMonths = date.split('/')[0] + date.split('/')[1];
+      const yearMonths = date.split('/')[0] + '/' + date.split('/')[1];
       if ((yearMonths === dateOption) || dateOption === 'all') {
         if ((dateMemberMessages[date][name])) totalMessages += dateMemberMessages[date][name].messages;
 
