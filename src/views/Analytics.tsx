@@ -19,8 +19,8 @@ export default function Analytics() {
   }, []);
 
   return (
-    <div className="flex justify-center items-center flex-col h-screen">
-      <div className="w-[700px] h-[700px]">
+    <div className="relative flex p-4 mx-auto items-center justify-center h-screen">
+      <div>
         <div className="flex">
           <span className="mt-2">{name} - { filteredMessages.totalMessages }</span>
           <Dropdown
