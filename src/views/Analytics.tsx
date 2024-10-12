@@ -1,10 +1,18 @@
-import { useEffect } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
-import { memberList, selectedName } from '../store/memberState';
-import { selectedDate } from '../store/dateState';
-import { filteredDateMemberMessages, yearMonths } from '../store/rootSelector';
-import { Dropdown } from 'semantic-ui-react';
+import { useEffect } from "react";
+import { useRecoilState, useRecoilValue } from "recoil";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+} from "recharts";
+import { memberList, selectedName } from "../store/memberState";
+import { selectedDate } from "../store/dateState";
+import { filteredDateMemberMessages, yearMonths } from "../store/rootSelector";
+import { Dropdown } from "semantic-ui-react";
 
 export default function Analytics() {
   const [memberNameList] = useRecoilState(memberList);
@@ -22,20 +30,20 @@ export default function Analytics() {
     <div className="relative flex p-4 mx-auto items-center justify-center h-screen">
       <div>
         <div className="flex">
-          <span className="mt-2">{name} - { filteredMessages.totalMessages }</span>
+          <span className="mt-2">
+            {name} - {filteredMessages.totalMessages}
+          </span>
           <Dropdown
             className="ml-2"
             value={name}
             selection
-            options={
-              memberNameList.map((name, index) => {
-                return {
-                  key: index,
-                  text: name,
-                  value: name,
-                };
-              })
-            }
+            options={memberNameList.map((name, index) => {
+              return {
+                key: index,
+                text: name,
+                value: name,
+              };
+            })}
             onChange={(e, { value }: { [key: string]: string }) => {
               setName(value);
             }}
@@ -44,25 +52,19 @@ export default function Analytics() {
             className="ml-2"
             value={date}
             selection
-            options={
-              dateOptions.map((date, index) => {
-                return {
-                  key: index,
-                  text: date,
-                  value: date,
-                }
-              })
-            }
+            options={dateOptions.map((date, index) => {
+              return {
+                key: index,
+                text: date,
+                value: date,
+              };
+            })}
             onChange={(e, { value }: { [key: string]: string }) => {
               setDate(value);
             }}
           />
         </div>
-        <LineChart
-          width={1200}
-          height={600}
-          data={filteredMessages.data}
-        >
+        <LineChart width={1200} height={600} data={filteredMessages.data}>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="date" />
           <YAxis />
@@ -73,4 +75,4 @@ export default function Analytics() {
       </div>
     </div>
   );
-};
+}
